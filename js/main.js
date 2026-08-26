@@ -124,7 +124,9 @@ function initContactForm() {
     // 1. Basic validation check
     const name = document.getElementById('fullname').value.trim();
     const email = document.getElementById('email').value.trim();
+    const whatsapp = document.getElementById('whatsapp') ? document.getElementById('whatsapp').value.trim() : '';
     const service = document.getElementById('service').value;
+    const budget = document.getElementById('budget') ? document.getElementById('budget').value : '';
     const message = document.getElementById('message').value.trim();
 
     if (!name || !email || !service || !message) {
@@ -132,7 +134,7 @@ function initContactForm() {
       return;
     }
 
-    // 2. Mock submission UI state (loading spinner)
+    // 2. Form submission UI state (loading spinner)
     const submitBtn = form.querySelector('.form-submit-btn');
     const originalBtnHTML = submitBtn.innerHTML;
     
@@ -143,7 +145,7 @@ function initContactForm() {
         <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" style="opacity: 0.25;"></circle>
         <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
       </svg>
-      Processing Inquiry...
+      Sending Inquiry...
     `;
 
     // Add inline keyframe for spin if it doesn't exist
@@ -154,8 +156,31 @@ function initContactForm() {
       document.head.appendChild(style);
     }
 
-    // 3. Emulate network delay of 1.5 seconds, then show success card
-    setTimeout(() => {
+    // 3. Post to FormSubmit API
+    fetch("https://formsubmit.co/ajax/humaq0974@gmail.com", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({
+        name: name,
+        email: email,
+        whatsapp: whatsapp,
+        service: service,
+        budget: budget,
+        message: message,
+        _subject: `New WEPVA Inquiry from ${name}`
+      })
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Failed to send email.');
+      }
+    })
+    .then(data => {
       formContainer.innerHTML = `
         <div class="form-success-box">
           <div class="form-success-icon">
@@ -170,7 +195,15 @@ function initContactForm() {
           </button>
         </div>
       `;
-    }, 1500);
+    })
+    .catch(error => {
+      console.error('Error submitting contact form:', error);
+      alert('There was a problem sending your inquiry. Please try again or email us directly at hello@wepva.com.');
+      // Restore submit button state
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = '1';
+      submitBtn.innerHTML = originalBtnHTML;
+    });
   });
 }
 
@@ -191,8 +224,10 @@ function prefillContactService() {
       'wordpress': 'wordpress',
       'shopify': 'shopify',
       'metaads': 'metaads',
+      'graphics': 'graphics',
       'management': 'management',
-      'ecommerce': 'ecommerce'
+      'ecommerce': 'ecommerce',
+      'general': 'general'
     };
 
     if (serviceMap[serviceParam]) {

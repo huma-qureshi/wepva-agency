@@ -211,7 +211,7 @@ header .container {
 }
 
 .logo img {
-  height: 72px;
+  height: 80px;
   transition: var(--transition-smooth);
 }
 
@@ -275,18 +275,83 @@ nav a:hover::after, nav a.active::after {
 /* --- HERO SECTION (DARK NAVY - MATCHING REFERENCE) --- */
 .hero {
   background-color: var(--color-bg-dark);
-  background-image: 
-    radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.12) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.12) 0%, transparent 40%);
   padding: 180px 0 120px 0;
   position: relative;
   overflow: hidden;
   color: var(--color-text-light);
+  animation: heroFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.hero::after {
-  display: none;
+/* Floating ambient glows */
+.hero::before, .services-hero::before, .portfolio-hero::before, .about-hero::before, .contact-hero::before {
+  content: '';
+  position: absolute;
+  top: -150px;
+  left: -100px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  animation: bannerFloat1 18s ease-in-out infinite alternate;
 }
+
+.hero::after, .services-hero::after, .portfolio-hero::after, .about-hero::after, .contact-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -150px;
+  right: -100px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  animation: bannerFloat2 22s ease-in-out infinite alternate;
+}
+
+.hero .container, .services-hero .container, .portfolio-hero .container, .about-hero .container, .contact-hero .container {
+  position: relative;
+  z-index: 3;
+}
+
+.hero-grid-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: center;
+  mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes bannerFloat1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(120px, 80px) scale(1.15); }
+}
+
+@keyframes bannerFloat2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-100px, -80px) scale(1.10); }
+}
+
+@keyframes heroFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
 
 .hero-tagline {
   font-family: var(--font-headers);
@@ -397,23 +462,49 @@ nav a:hover::after, nav a.active::after {
   gap: 30px;
 }
 
-.services-grid.five-items {
-  grid-template-columns: repeat(6, 1fr);
+.services-grid.six-items {
+  grid-template-columns: repeat(3, 1fr);
 }
 
-/* Handle the 5 cards grid layout: first row of 3, second row of 2 centered */
-.services-grid.five-items .service-card {
-  grid-column: span 2;
+.services-grid.six-items .service-card {
+  grid-column: span 1;
 }
 
-/* On desktop, last two items center in grid */
-@media (min-width: 1025px) {
-  .services-grid.five-items .service-card:nth-child(4) {
-    grid-column: 2 / span 2;
-  }
-  .services-grid.five-items .service-card:nth-child(5) {
-    grid-column: 4 / span 2;
-  }
+/* Benefit Icon Styling for Services Page */
+.benefit-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-sm);
+  background: rgba(37, 99, 235, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  flex-shrink: 0;
+  transition: var(--transition-smooth);
+}
+
+.benefit-icon.search-icon {
+  background: rgba(139, 92, 246, 0.08);
+  color: var(--color-accent);
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.1);
+}
+
+.benefit-icon:hover {
+  transform: scale(1.08) rotate(5deg);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  color: var(--color-text-light);
+  box-shadow: var(--shadow-glow);
+}
+
+/* Pinterest Pins Grid Styling */
+.portfolio-card[data-category="pins"] .portfolio-img-wrapper {
+  aspect-ratio: 2 / 3;
+}
+
+.portfolio-card[data-category="pins"] .portfolio-img-wrapper img {
+  object-fit: contain;
+  background-color: #070913; /* Dark backdrop to make pins pop */
 }
 
 .service-card {
@@ -868,11 +959,12 @@ footer {
    ========================================== */
 .services-hero {
   background-color: var(--color-bg-dark);
-  background-image: radial-gradient(circle at top right, rgba(37, 99, 235, 0.12) 0%, transparent 50%);
   color: var(--color-text-light);
   padding: 160px 0 80px 0;
   text-align: center;
   border-bottom: none;
+  position: relative;
+  overflow: hidden;
 }
 
 .services-hero h1 {
@@ -990,11 +1082,12 @@ footer {
    ========================================== */
 .portfolio-hero {
   background-color: var(--color-bg-dark);
-  background-image: radial-gradient(circle at top right, rgba(37, 99, 235, 0.12) 0%, transparent 50%);
   color: var(--color-text-light);
   padding: 160px 0 80px 0;
   text-align: center;
   border-bottom: none;
+  position: relative;
+  overflow: hidden;
 }
 
 .portfolio-hero h1 {
@@ -1054,10 +1147,11 @@ footer {
    ========================================== */
 .about-hero {
   background-color: var(--color-bg-dark);
-  background-image: radial-gradient(circle at top right, rgba(37, 99, 235, 0.12) 0%, transparent 50%);
   color: var(--color-text-light);
   padding: 160px 0 80px 0;
   border-bottom: none;
+  position: relative;
+  overflow: hidden;
 }
 
 .about-hero-grid {
@@ -1180,11 +1274,12 @@ footer {
    ========================================== */
 .contact-hero {
   background-color: var(--color-bg-dark);
-  background-image: radial-gradient(circle at top right, rgba(37, 99, 235, 0.12) 0%, transparent 50%);
   color: var(--color-text-light);
   padding: 160px 0 80px 0;
   text-align: center;
   border-bottom: none;
+  position: relative;
+  overflow: hidden;
 }
 
 .contact-hero h1 {
@@ -1372,16 +1467,11 @@ footer {
     grid-template-columns: 1fr 1fr;
   }
   
-  .services-grid.five-items {
+  .services-grid.six-items {
     grid-template-columns: 1fr 1fr;
   }
   
-  .services-grid.five-items .service-card {
-    grid-column: span 1;
-  }
-  
-  .services-grid.five-items .service-card:nth-child(4),
-  .services-grid.five-items .service-card:nth-child(5) {
+  .services-grid.six-items .service-card {
     grid-column: span 1;
   }
   
