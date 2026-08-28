@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initContactForm();
   prefillContactService();
   initScrollAnimations();
+  initStatsCounter();
+  initCustomCursor();
+  initMagneticButtons();
 });
 
 /**
@@ -49,6 +52,7 @@ function initMobileMenu() {
     // Accessibility: toggle aria-expanded
     const isExpanded = menuToggle.classList.contains('active');
     menuToggle.setAttribute('aria-expanded', isExpanded);
+    document.body.classList.toggle('nav-open', isExpanded);
   });
 
   // Close menu when clicking outside
@@ -57,6 +61,7 @@ function initMobileMenu() {
       menuToggle.classList.remove('active');
       nav.classList.remove('active');
       menuToggle.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('nav-open');
     }
   });
 
@@ -67,6 +72,7 @@ function initMobileMenu() {
       menuToggle.classList.remove('active');
       nav.classList.remove('active');
       menuToggle.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('nav-open');
     });
   });
 }
@@ -240,23 +246,15 @@ function prefillContactService() {
  * Scroll Animations using Intersection Observer (Fades/Slides elements in as you scroll)
  */
 function initScrollAnimations() {
-  // Add animation styles dynamically to keep clean CSS files
-  if (!document.getElementById('reveal-style')) {
-    const style = document.createElement('style');
-    style.id = 'reveal-style';
-    style.innerHTML = `
-      .reveal {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-      .reveal.revealed {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    `;
-    document.head.appendChild(style);
-  }
+  // Apply inline stagger animation delays for grid layouts
+  const grids = document.querySelectorAll('.services-grid, .portfolio-grid, .why-grid, .process-grid, .about-hero-stats');
+  grids.forEach(grid => {
+    const items = grid.children;
+    Array.from(items).forEach((item, index) => {
+      // stagger by 120ms
+      item.style.setProperty('--stagger-delay', `${index * 0.12}s`);
+    });
+  });
 
   // Setup observer
   const reveals = document.querySelectorAll('.service-card, .portfolio-card, .why-card, .process-step, .founder-img-wrapper, .founder-bio, .contact-details-box, .contact-form-wrapper');
@@ -270,7 +268,7 @@ function initScrollAnimations() {
         }
       });
     }, {
-      threshold: 0.1,
+      threshold: 0.05,
       rootMargin: '0px 0px -50px 0px'
     });
 
@@ -282,4 +280,159 @@ function initScrollAnimations() {
     // Fallback: reveal immediately for older browsers
     reveals.forEach(el => el.classList.add('revealed'));
   }
+}
+
+/**
+ * Animate numbers when they scroll into view
+ */
+function initStatsCounter() {
+  const statsElements = document.querySelectorAll('.about-hero-stats > div > div:first-child');
+  if (statsElements.length === 0) return;
+  
+  const animate = (el) => {
+    const text = el.innerText;
+    // Extract numeric parts (including decimals)
+    const match = text.match(/([0-9.]+)/);
+    if (!match) return;
+    
+    const target = parseFloat(match[1]);
+    const isDecimal = match[1].includes('.');
+    const suffix = text.replace(match[1], ''); // e.g. "+", "%", "x"
+    
+    const duration = 1600; // 1.6 seconds
+    const startTime = performance.now();
+    
+    const update = (now) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Ease out cubic
+      const easeProgress = 1 - Math.pow(1 - progress, 3);
+      
+      const current = target * easeProgress;
+      
+      if (isDecimal) {
+        el.innerText = current.toFixed(1) + suffix;
+      } else {
+        el.innerText = Math.floor(current) + suffix;
+      }
+      
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        el.innerText = text; // Ensure precise final string
+      }
+    };
+    
+    requestAnimationFrame(update);
+  };
+  
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animate(entry.target);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    
+    statsElements.forEach(el => observer.observe(el));
+  } else {
+    statsElements.forEach(el => animate(el));
+  }
+}
+
+/**
+ * Custom Mouse Follower Cursor Effect
+ */
+function initCustomCursor() {
+  // Check if user prefers reduced motion or is on touch device
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
+  
+  // Create cursor element (Only dot, no lagging circle outline!)
+  const dot = document.createElement('div');
+  dot.className = 'custom-cursor-dot';
+  document.body.appendChild(dot);
+  
+  // Update cursor position instantly using high-performance translate3d
+  window.addEventListener('mousemove', (e) => {
+    dot.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+    if (!document.body.classList.contains('cursor-active')) {
+      document.body.classList.add('cursor-active');
+    }
+  });
+  
+  // Hide cursor when leaving window
+  document.addEventListener('mouseleave', () => {
+    document.body.classList.remove('cursor-active');
+  });
+  
+  // Hover expansion bindings for interactive elements
+  const updateHoverListeners = () => {
+    const hoverables = document.querySelectorAll('a, button, .btn, .portfolio-card, .service-card, .filter-btn, .menu-toggle, .social-link');
+    
+    hoverables.forEach(el => {
+      // Remove any existing listeners to prevent duplicates if function runs again
+      el.removeEventListener('mouseenter', onMouseEnter);
+      el.removeEventListener('mouseleave', onMouseLeave);
+      
+      el.addEventListener('mouseenter', onMouseEnter);
+      el.addEventListener('mouseleave', onMouseLeave);
+    });
+  };
+  
+  const onMouseEnter = () => {
+    dot.classList.add('hovered');
+  };
+  
+  const onMouseLeave = () => {
+    dot.classList.remove('hovered');
+  };
+  
+  updateHoverListeners();
+  
+  // Re-run listener attachment if portfolio filters change elements
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Wait for DOM changes from category display toggles
+      setTimeout(updateHoverListeners, 400);
+    });
+  });
+}
+
+/**
+ * Magnetic Button Interactions
+ */
+function initMagneticButtons() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
+
+  const buttons = document.querySelectorAll('.btn, .social-link, .menu-toggle, .filter-btn');
+  
+  buttons.forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      
+      // Pull towards cursor slightly (30% force)
+      btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+      
+      const icon = btn.querySelector('.btn-icon, svg');
+      if (icon) {
+        icon.style.transform = `translate(${x * 0.12}px, ${y * 0.12}px)`;
+      }
+    });
+    
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = 'translate(0px, 0px)';
+      const icon = btn.querySelector('.btn-icon, svg');
+      if (icon) {
+        icon.style.transform = 'translate(0px, 0px)';
+      }
+    });
+  });
 }
