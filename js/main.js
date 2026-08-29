@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   prefillContactService();
   initScrollAnimations();
   initStatsCounter();
-  initCustomCursor();
+  // initCustomCursor();
   initMagneticButtons();
 });
 
@@ -130,12 +130,15 @@ function initContactForm() {
     // 1. Basic validation check
     const name = document.getElementById('fullname').value.trim();
     const email = document.getElementById('email').value.trim();
-    const whatsapp = document.getElementById('whatsapp') ? document.getElementById('whatsapp').value.trim() : '';
+    const website = document.getElementById('website') ? document.getElementById('website').value.trim() : '';
     const service = document.getElementById('service').value;
     const budget = document.getElementById('budget') ? document.getElementById('budget').value : '';
-    const message = document.getElementById('message').value.trim();
+    const issues = document.getElementById('issues') ? document.getElementById('issues').value.trim() : '';
+    const expectations = document.getElementById('expectations') ? document.getElementById('expectations').value.trim() : '';
+    const taskVideo = document.getElementById('task-video') ? document.getElementById('task-video').value : '';
+    const discovery = document.getElementById('discovery') ? document.getElementById('discovery').value : '';
 
-    if (!name || !email || !service || !message) {
+    if (!name || !email || !service || !issues || !expectations || !discovery) {
       alert('Please fill out all required fields.');
       return;
     }
@@ -163,7 +166,7 @@ function initContactForm() {
     }
 
     // 3. Post to FormSubmit API
-    fetch("https://formsubmit.co/ajax/humaq0974@gmail.com", {
+    fetch("https://formsubmit.co/ajax/humabusiness25@gmail.com", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -172,10 +175,13 @@ function initContactForm() {
       body: JSON.stringify({
         name: name,
         email: email,
-        whatsapp: whatsapp,
+        website_url: website,
         service: service,
         budget: budget,
-        message: message,
+        website_issues: issues,
+        what_to_achieve: expectations,
+        share_task_video: taskVideo,
+        how_did_you_find_me: discovery,
         _subject: `New WEPVA Inquiry from ${name}`
       })
     })
@@ -204,7 +210,7 @@ function initContactForm() {
     })
     .catch(error => {
       console.error('Error submitting contact form:', error);
-      alert('There was a problem sending your inquiry. Please try again or email us directly at hello@wepva.com.');
+      alert('There was a problem sending your inquiry. Please try again or email us directly at humabusiness25@gmail.com.');
       // Restore submit button state
       submitBtn.disabled = false;
       submitBtn.style.opacity = '1';
@@ -231,6 +237,7 @@ function prefillContactService() {
       'shopify': 'shopify',
       'metaads': 'metaads',
       'graphics': 'graphics',
+      'logo': 'logo',
       'management': 'management',
       'ecommerce': 'ecommerce',
       'general': 'general'

@@ -3,9 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Get in touch with WEPVA. Submit our project form for WordPress development, Shopify setup, Meta Ads, and website support estimates.">
+  <meta name="description" content="Get in touch with WEPVA. Submit our project form for WordPress development, Shopify setup, Meta Ads, Brand Logo Design, and website support estimates.">
+  <meta name="keywords" content="Hire WEPVA, Start Web Project, Contact Huma Qureshi, WordPress Development Quote, Shopify Store Estimate">
+  <meta name="robots" content="index, follow">
   <title>Contact Us | Start A Web Project | WEPVA</title>
+  
+  <!-- Canonical Link -->
+  <link rel="canonical" href="https://wepva.site/contact.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://wepva.site/contact.html">
+  <meta property="og:title" content="Contact Us | Start A Web Project | WEPVA">
+  <meta property="og:description" content="Get in touch with WEPVA. Submit our project form for WordPress development, Shopify setup, Meta Ads, Brand Logo Design, and website support estimates.">
+  <meta property="og:image" content="https://wepva.site/assets/images/logo-banner-services.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://wepva.site/contact.html">
+  <meta property="twitter:title" content="Contact Us | Start A Web Project | WEPVA">
+  <meta property="twitter:description" content="Get in touch with WEPVA. Submit our project form for WordPress development, Shopify setup, Meta Ads, Brand Logo Design, and website support estimates.">
+  <meta property="twitter:image" content="https://wepva.site/assets/images/logo-banner-services.png">
+
+  <!-- CSS Stylesheet -->
   <link rel="stylesheet" href="css/style.css?v=3.0">
+  
+  <!-- Favicon -->
   <link rel="shortcut icon" href="assets/images/logo-light-text.png" type="image/x-icon">
 </head>
 <body>
@@ -65,23 +88,7 @@
               </div>
               <div class="contact-info-text">
                 <h4>Official Email</h4>
-                <a href="mailto:hello@wepva.com">hello@wepva.com</a>
-              </div>
-            </div>
-            
-            <!-- WhatsApp -->
-            <div class="contact-info-item">
-              <div class="contact-info-icon">
-                <!-- Phone/WhatsApp SVG -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <div class="contact-info-text">
-                <h4>WhatsApp Chat</h4>
-                <a href="https://wa.me/923001234567?text=Hello%20WEPVA,%20I'd%20like%20to%20start%20a%20project." target="_blank" rel="noopener noreferrer" style="font-weight: 600; color: #10b981;">
-                  Chat on WhatsApp &rarr;
-                </a>
+                <a href="mailto:humabusiness25@gmail.com">humabusiness25@gmail.com</a>
               </div>
             </div>
             
@@ -129,10 +136,10 @@
               <input type="email" id="email" class="form-input" placeholder="name@company.com" required>
             </div>
             
-            <!-- WhatsApp Phone -->
-            <div class="form-group">
-              <label for="whatsapp" class="form-label">WhatsApp Number</label>
-              <input type="tel" id="whatsapp" class="form-input" placeholder="+1 (555) 123-4567">
+            <!-- Website URL (Optional) -->
+            <div class="form-group form-group-full">
+              <label for="website" class="form-label">Website URL (Optional)</label>
+              <input type="url" id="website" class="form-input" placeholder="https://example.com">
             </div>
             
             <!-- Select Service -->
@@ -144,6 +151,7 @@
                 <option value="shopify">Shopify Development</option>
                 <option value="metaads">Meta Ads Marketing</option>
                 <option value="graphics">Graphic & Brand Design</option>
+                <option value="logo">Brand Logo Design</option>
                 <option value="management">Website Management / VA</option>
                 <option value="ecommerce">E-commerce Solutions</option>
                 <option value="general">General Consultation</option>
@@ -151,7 +159,7 @@
             </div>
             
             <!-- Estimated Budget -->
-            <div class="form-group form-group-full">
+            <div class="form-group">
               <label for="budget" class="form-label">Estimated Project Budget</label>
               <select id="budget" class="form-select">
                 <option value="" disabled selected>Select estimated budget range</option>
@@ -161,11 +169,41 @@
                 <option value="5k+">$5,000+</option>
               </select>
             </div>
+
+            <!-- Do u want to share a task video? -->
+            <div class="form-group">
+              <label for="task-video" class="form-label">Do you want to share a task video?</label>
+              <select id="task-video" class="form-select">
+                <option value="no">No</option>
+                <option value="yes-link">Yes (I will share a Loom/Drive link below)</option>
+                <option value="yes-email">Yes (I will send it via email)</option>
+              </select>
+            </div>
+
+            <!-- How did you find out about me? -->
+            <div class="form-group">
+              <label for="discovery" class="form-label">How did you find out about me? *</label>
+              <select id="discovery" class="form-select" required>
+                <option value="" disabled selected>Select an option</option>
+                <option value="word-of-mouth">Word of mouth / referral</option>
+                <option value="email">Email</option>
+                <option value="instagram">Instagram</option>
+                <option value="pinterest">Pinterest</option>
+                <option value="google-search">Google search</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
             
-            <!-- Project Details -->
+            <!-- Describe your website issue(s) in detail -->
             <div class="form-group form-group-full">
-              <label for="message" class="form-label">Project Details &amp; Milestones *</label>
-              <textarea id="message" class="form-textarea" placeholder="Tell us about your brand, scope of work, timeline, and expectations..." required></textarea>
+              <label for="issues" class="form-label">Describe your website issue(s) in detail *</label>
+              <textarea id="issues" class="form-textarea" placeholder="List the specific errors, bugs, or updates needed on your website..." required></textarea>
+            </div>
+
+            <!-- What do you hope to achieve with my help? -->
+            <div class="form-group form-group-full">
+              <label for="expectations" class="form-label">What do you hope to achieve with my help? *</label>
+              <textarea id="expectations" class="form-textarea" placeholder="Describe your expectations, goals, and what you hope to achieve..." required></textarea>
             </div>
             
             <!-- Submit Button -->
@@ -235,13 +273,7 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
-              <span>hello@wepva.com</span>
-            </div>
-            <div class="footer-contact-item">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-              </svg>
-              <span>+92 300 1234567</span>
+              <span>humabusiness25@gmail.com</span>
             </div>
             <div class="footer-contact-item">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
