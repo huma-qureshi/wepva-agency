@@ -20,12 +20,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * Clean URL: Automatically clean index.html from address bar
+ * Clean URL: Automatically remove .html and trailing index.html from address bar
  */
 function initCleanUrl() {
-  if (window.location.pathname.endsWith('/index.html') || window.location.pathname === '/index.html') {
-    const cleanPath = (window.location.pathname.replace(/\/index\.html$/, '/') || '/') + window.location.search + window.location.hash;
-    window.history.replaceState(null, '', cleanPath);
+  const path = window.location.pathname;
+  if (path.endsWith('.html')) {
+    let clean = path.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+    if (!clean) clean = '/';
+    window.history.replaceState(null, '', clean + window.location.search + window.location.hash);
   }
 }
 
