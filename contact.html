@@ -88,7 +88,7 @@
               </div>
               <div class="contact-info-text">
                 <h4>Official Email</h4>
-                <a href="mailto:humabusiness25@gmail.com">humabusiness25@gmail.com</a>
+                <a href="mailto:wepva@gmail.com">wepva@gmail.com</a>
               </div>
             </div>
             
@@ -123,29 +123,29 @@
         
         <!-- Contact Form column -->
         <div class="contact-form-wrapper">
-          <form id="wepva-contact-form" class="contact-form" novalidate>
+          <form id="wepva-contact-form" class="contact-form" action="https://formsubmit.co/wepva@gmail.com" method="POST" novalidate>
             <!-- Full Name -->
             <div class="form-group">
               <label for="fullname" class="form-label">Full Name *</label>
-              <input type="text" id="fullname" class="form-input" placeholder="Your Name" required>
+              <input type="text" id="fullname" name="name" class="form-input" placeholder="Your Name" required>
             </div>
             
             <!-- Email Address -->
             <div class="form-group">
               <label for="email" class="form-label">Email Address *</label>
-              <input type="email" id="email" class="form-input" placeholder="name@company.com" required>
+              <input type="email" id="email" name="email" class="form-input" placeholder="name@company.com" required>
             </div>
             
             <!-- Website URL (Optional) -->
             <div class="form-group form-group-full">
               <label for="website" class="form-label">Website URL (Optional)</label>
-              <input type="url" id="website" class="form-input" placeholder="https://example.com">
+              <input type="url" id="website" name="website_url" class="form-input" placeholder="https://example.com">
             </div>
             
             <!-- Select Service -->
             <div class="form-group">
               <label for="service" class="form-label">Select Service *</label>
-              <select id="service" class="form-select" required>
+              <select id="service" name="service" class="form-select" required>
                 <option value="" disabled selected>Select a Service</option>
                 <option value="wordpress">WordPress Development</option>
                 <option value="shopify">Shopify Development</option>
@@ -161,7 +161,7 @@
             <!-- Estimated Budget -->
             <div class="form-group">
               <label for="budget" class="form-label">Estimated Project Budget</label>
-              <select id="budget" class="form-select">
+              <select id="budget" name="budget" class="form-select">
                 <option value="" disabled selected>Select estimated budget range</option>
                 <option value="<100">Under $100</option>
                 <option value="100-250">$100 - $250</option>
@@ -176,7 +176,7 @@
             <!-- Do u want to share a task video? -->
             <div class="form-group">
               <label for="task-video" class="form-label">Do you want to share a task video?</label>
-              <select id="task-video" class="form-select">
+              <select id="task-video" name="share_task_video" class="form-select">
                 <option value="no">No</option>
                 <option value="yes-link">Yes (I will share a Loom/Drive link below)</option>
                 <option value="yes-email">Yes (I will send it via email)</option>
@@ -186,7 +186,7 @@
             <!-- How did you find out about me? -->
             <div class="form-group">
               <label for="discovery" class="form-label">How did you find out about me? *</label>
-              <select id="discovery" class="form-select" required>
+              <select id="discovery" name="how_found" class="form-select" required>
                 <option value="" disabled selected>Select an option</option>
                 <option value="word-of-mouth">Word of mouth / referral</option>
                 <option value="email">Email</option>
@@ -200,13 +200,13 @@
             <!-- Describe your website issue(s) in detail -->
             <div class="form-group form-group-full">
               <label for="issues" class="form-label">Describe your website issue(s) in detail *</label>
-              <textarea id="issues" class="form-textarea" placeholder="List the specific errors, bugs, or updates needed on your website..." required></textarea>
+              <textarea id="issues" name="website_issues" class="form-textarea" placeholder="List the specific errors, bugs, or updates needed on your website..." required></textarea>
             </div>
 
             <!-- What do you hope to achieve with my help? -->
             <div class="form-group form-group-full">
               <label for="expectations" class="form-label">What do you hope to achieve with my help? *</label>
-              <textarea id="expectations" class="form-textarea" placeholder="Describe your expectations, goals, and what you hope to achieve..." required></textarea>
+              <textarea id="expectations" name="what_to_achieve" class="form-textarea" placeholder="Describe your expectations, goals, and what you hope to achieve..." required></textarea>
             </div>
             
             <!-- Submit Button -->
@@ -238,7 +238,7 @@
             </a>
             <a href="https://www.instagram.com/scale_secure/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 0zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
               </svg>
             </a>
             <a href="https://www.facebook.com/qureshi.huma.33483" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook">
@@ -254,6 +254,7 @@
             <li><a href="index.html">Home</a></li>
             <li><a href="services.html">Services</a></li>
             <li><a href="portfolio.html">Portfolio</a></li>
+            <li><a href="index.html#reviews">Client Reviews</a></li>
             <li><a href="about.html">About Us</a></li>
             <li><a href="contact.html">Contact Form</a></li>
           </ul>
@@ -276,7 +277,7 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
-              <span>humabusiness25@gmail.com</span>
+              <span>wepva@gmail.com</span>
             </div>
             <div class="footer-contact-item">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

@@ -7,8 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initStickyHeader();
   initMobileMenu();
   initPortfolioFilters();
+  initReviewFilters();
+  initReviewModal();
   initContactForm();
   prefillContactService();
+  scrollToServiceSection();
   initScrollAnimations();
   initStatsCounter();
   // initCustomCursor();
@@ -94,7 +97,7 @@ function initPortfolioFilters() {
 
       const filterValue = button.getAttribute('data-filter');
 
-      // 2. Filter projects with simple animation
+      // 2. Filter projects with clean transition
       projectCards.forEach(card => {
         card.style.opacity = '0';
         card.style.transform = 'scale(0.95)';
@@ -105,6 +108,11 @@ function initPortfolioFilters() {
             setTimeout(() => {
               card.style.opacity = '1';
               card.style.transform = 'scale(1)';
+              // Clear inline styles so CSS hover remains smooth
+              setTimeout(() => {
+                card.style.opacity = '';
+                card.style.transform = '';
+              }, 300);
             }, 50);
           } else {
             card.classList.add('hidden');
@@ -113,6 +121,250 @@ function initPortfolioFilters() {
       });
     });
   });
+}
+
+/**
+ * Reviews Category Filtering Logic
+ */
+function initReviewFilters() {
+  const filterButtons = document.querySelectorAll('.review-filter-btn');
+  const reviewCards = document.querySelectorAll('.reviews-grid .review-card');
+  
+  if (filterButtons.length === 0 || reviewCards.length === 0) return;
+
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      // 1. Set active class on button
+      filterButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+
+      const filterValue = button.getAttribute('data-filter');
+
+      // 2. Filter reviews with smooth animation
+      reviewCards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(10px) scale(0.96)';
+        
+        setTimeout(() => {
+          if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
+            card.classList.remove('hidden');
+            setTimeout(() => {
+              card.style.opacity = '1';
+              card.style.transform = 'translateY(0) scale(1)';
+              // Clear inline styles so CSS hover remains smooth
+              setTimeout(() => {
+                card.style.opacity = '';
+                card.style.transform = '';
+              }, 300);
+            }, 50);
+          } else {
+            card.classList.add('hidden');
+          }
+        }, 250);
+      });
+    });
+  });
+}
+
+/**
+ * Review Submission Modal & Rating Picker Logic
+ */
+function initReviewModal() {
+  const modal = document.getElementById('review-modal');
+  const openButtons = document.querySelectorAll('.open-review-modal-trigger, #open-review-modal-btn');
+  const closeBtn = document.getElementById('close-review-modal-btn');
+  const form = document.getElementById('wepva-review-form');
+  const starBtns = document.querySelectorAll('.star-btn');
+  const ratingInput = document.getElementById('review-rating');
+  const ratingLabel = document.getElementById('rating-label');
+
+  if (!modal) return;
+
+  const ratingDescriptions = {
+    1: '1.0 / 5.0 (Poor)',
+    2: '2.0 / 5.0 (Fair)',
+    3: '3.0 / 5.0 (Good)',
+    4: '4.0 / 5.0 (Very Good)',
+    5: '5.0 / 5.0 (Excellent)'
+  };
+
+  const openModal = () => {
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeModal = () => {
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  };
+
+  openButtons.forEach(btn => btn.addEventListener('click', openModal));
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+  });
+
+  // Star Rating Interaction
+  let updateStars = null;
+  if (starBtns.length > 0) {
+    updateStars = (rating) => {
+      starBtns.forEach(btn => {
+        const starVal = parseInt(btn.getAttribute('data-star'));
+        if (starVal <= rating) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+      if (ratingInput) ratingInput.value = rating;
+      if (ratingLabel && ratingDescriptions[rating]) {
+        ratingLabel.innerText = ratingDescriptions[rating];
+      }
+    };
+
+    starBtns.forEach(btn => {
+      btn.addEventListener('mouseenter', () => {
+        const hoverVal = parseInt(btn.getAttribute('data-star'));
+        starBtns.forEach(b => {
+          const v = parseInt(b.getAttribute('data-star'));
+          if (v <= hoverVal) b.classList.add('hover');
+          else b.classList.remove('hover');
+        });
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        starBtns.forEach(b => b.classList.remove('hover'));
+      });
+
+      btn.addEventListener('click', () => {
+        const val = parseInt(btn.getAttribute('data-star'));
+        updateStars(val);
+      });
+    });
+  }
+
+  // Handle Review Submission
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('review-author-name').value.trim();
+      const role = document.getElementById('review-author-role').value.trim();
+      const category = document.getElementById('review-category').value;
+      const headline = document.getElementById('review-headline').value.trim();
+      const reviewText = document.getElementById('review-text').value.trim();
+      const rating = parseInt(ratingInput ? ratingInput.value : '5') || 5;
+
+      if (!name || !role || !headline || !reviewText) {
+        alert('Please fill out all required fields.');
+        return;
+      }
+
+      const submitBtn = form.querySelector('.review-submit-btn');
+      const origBtnHTML = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Publishing Review...';
+
+      // Build Initials
+      const nameParts = name.split(' ');
+      const initials = nameParts.length > 1
+        ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
+        : name.slice(0, 2).toUpperCase();
+
+      // Category label & badge class mapping
+      const catMap = {
+        'wordpress': { name: 'WordPress Dev', cls: '' },
+        'shopify': { name: 'Shopify Store', cls: 'shopify' },
+        'metaads': { name: 'Meta Ads', cls: 'metaads' },
+        'management': { name: 'Website VA & Support', cls: 'management' },
+        'design': { name: 'Brand & Graphics', cls: 'design' }
+      };
+      const catInfo = catMap[category] || { name: 'Client Feedback', cls: '' };
+
+      // Generate Star SVGs
+      let starsHTML = '';
+      for (let i = 0; i < rating; i++) {
+        starsHTML += `<svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
+      }
+
+      // Create new review card element
+      const newCard = document.createElement('div');
+      newCard.className = 'review-card reveal revealed';
+      newCard.setAttribute('data-category', category);
+      newCard.style.border = '2px solid var(--color-primary)';
+      newCard.style.animation = 'fadeIn 0.6s ease';
+
+      newCard.innerHTML = `
+        <div>
+          <div class="review-card-header">
+            <div class="review-stars" aria-label="${rating} out of 5 stars">
+              ${starsHTML}
+            </div>
+            <span class="review-category-badge ${catInfo.cls}">${catInfo.name}</span>
+          </div>
+          <div class="review-body">
+            <h3 class="review-headline">"${headline}"</h3>
+            <p class="review-text">"${reviewText}"</p>
+          </div>
+        </div>
+        <div class="review-author">
+          <div class="author-avatar av-1">${initials}</div>
+          <div class="author-details">
+            <span class="author-name">${name}</span>
+            <span class="author-title">${role}</span>
+            <span class="verified-badge">
+              <svg viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
+              Verified Client
+            </span>
+          </div>
+        </div>
+      `;
+
+      // Prepend to reviews grid
+      const reviewsGrid = document.getElementById('reviews-grid-container') || document.querySelector('.reviews-grid');
+      if (reviewsGrid) {
+        reviewsGrid.prepend(newCard);
+      }
+
+      // Send to FormSubmit backend asynchronously
+      fetch("https://formsubmit.co/ajax/wepva@gmail.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          type: "Client Testimonial Submission",
+          client_name: name,
+          client_role: role,
+          service_category: category,
+          rating: rating + "/5",
+          headline: headline,
+          review_feedback: reviewText,
+          _subject: `New Client Review from ${name} (${rating} Stars)`
+        })
+      }).catch(err => console.log('Feedback logged:', err));
+
+      setTimeout(() => {
+        alert('Thank you! Your review has been submitted and posted.');
+        form.reset();
+        if (updateStars) updateStars(5);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = origBtnHTML;
+        closeModal();
+
+        // Scroll smoothly to reviews section
+        const reviewsSec = document.getElementById('reviews');
+        if (reviewsSec) {
+          reviewsSec.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 500);
+    });
+  }
 }
 
 /**
@@ -139,7 +391,13 @@ function initContactForm() {
     const discovery = document.getElementById('discovery') ? document.getElementById('discovery').value : '';
 
     if (!name || !email || !service || !issues || !expectations || !discovery) {
-      alert('Please fill out all required fields.');
+      alert('Please fill out all required fields marked with *.');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address.');
       return;
     }
 
@@ -166,7 +424,7 @@ function initContactForm() {
     }
 
     // 3. Post to FormSubmit API
-    fetch("https://formsubmit.co/ajax/humabusiness25@gmail.com", {
+    fetch("https://formsubmit.co/ajax/wepva@gmail.com", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -210,7 +468,7 @@ function initContactForm() {
     })
     .catch(error => {
       console.error('Error submitting contact form:', error);
-      alert('There was a problem sending your inquiry. Please try again or email us directly at humabusiness25@gmail.com.');
+      alert('There was a problem sending your inquiry. Please try again or email us directly at wepva@gmail.com.');
       // Restore submit button state
       submitBtn.disabled = false;
       submitBtn.style.opacity = '1';
@@ -250,11 +508,30 @@ function prefillContactService() {
 }
 
 /**
+ * Smooth scroll to service section on services.html
+ * Example: services.html?service=wordpress or services.html?service=logo
+ */
+function scrollToServiceSection() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const serviceParam = urlParams.get('service');
+  if (!serviceParam) return;
+
+  const targetId = serviceParam === 'logo' ? 'logo' : serviceParam;
+  const targetElement = document.getElementById(targetId) || document.getElementById('logo-design');
+  
+  if (targetElement) {
+    setTimeout(() => {
+      targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 200);
+  }
+}
+
+/**
  * Scroll Animations using Intersection Observer (Fades/Slides elements in as you scroll)
  */
 function initScrollAnimations() {
   // Apply inline stagger animation delays for grid layouts
-  const grids = document.querySelectorAll('.services-grid, .portfolio-grid, .why-grid, .process-grid, .about-hero-stats');
+  const grids = document.querySelectorAll('.services-grid, .portfolio-grid, .why-grid, .process-grid, .reviews-grid, .about-hero-stats');
   grids.forEach(grid => {
     const items = grid.children;
     Array.from(items).forEach((item, index) => {
@@ -264,7 +541,7 @@ function initScrollAnimations() {
   });
 
   // Setup observer
-  const reveals = document.querySelectorAll('.service-card, .portfolio-card, .why-card, .process-step, .founder-img-wrapper, .founder-bio, .contact-details-box, .contact-form-wrapper');
+  const reveals = document.querySelectorAll('.service-card, .portfolio-card, .why-card, .process-step, .review-card, .reviews-stats-banner, .reviews-cta-box, .founder-img-wrapper, .founder-bio, .contact-details-box, .contact-form-wrapper');
   
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver((entries) => {
@@ -417,7 +694,7 @@ function initMagneticButtons() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
 
-  const buttons = document.querySelectorAll('.btn, .social-link, .menu-toggle, .filter-btn');
+  const buttons = document.querySelectorAll('.btn, .social-link, .menu-toggle, .filter-btn, .review-filter-btn');
   
   buttons.forEach(btn => {
     btn.addEventListener('mousemove', (e) => {
