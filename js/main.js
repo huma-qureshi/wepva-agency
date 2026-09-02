@@ -4,6 +4,7 @@
    ========================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initCleanUrl();
   initStickyHeader();
   initMobileMenu();
   initPortfolioFilters();
@@ -17,6 +18,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // initCustomCursor();
   initMagneticButtons();
 });
+
+/**
+ * Clean URL: Automatically clean index.html from address bar
+ */
+function initCleanUrl() {
+  if (window.location.pathname.endsWith('/index.html') || window.location.pathname === '/index.html') {
+    const cleanPath = (window.location.pathname.replace(/\/index\.html$/, '/') || '/') + window.location.search + window.location.hash;
+    window.history.replaceState(null, '', cleanPath);
+  }
+}
 
 /**
  * Sticky Header Transition
