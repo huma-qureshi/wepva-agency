@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Disallow sensitive or system directories if any in future
+# Disallow: /admin/
+
+# Sitemap location
+Sitemap: https://wepva.site/sitemap.xml
