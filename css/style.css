@@ -241,10 +241,7 @@ header .container {
 }
 
 body.nav-open .logo {
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-  transform: translateX(-15px);
+  display: none !important;
 }
 
 body.nav-open header {
@@ -325,13 +322,11 @@ nav a:hover::after, nav a.active::after {
 .nav-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(7, 9, 19, 0.65);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: rgba(7, 9, 19, 0.6);
   z-index: 9998;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.3s ease;
 }
 
 body.nav-open .nav-backdrop {
@@ -2140,10 +2135,16 @@ footer {
   /* Header & Navigation */
   header {
     padding: 10px 0;
+    background: #ffffff;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 
   header.scrolled {
     padding: 6px 0;
+    background: #ffffff;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 
   .logo img {
@@ -2170,9 +2171,10 @@ footer {
     width: min(320px, 86vw);
     height: 100vh;
     height: 100dvh;
-    background: #ffffff;
+    background-color: #ffffff !important;
+    background: #ffffff !important;
     padding: 85px 24px 32px 24px;
-    box-shadow: -15px 0 45px rgba(15, 23, 42, 0.2);
+    box-shadow: -15px 0 45px rgba(15, 23, 42, 0.25);
     transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 10005;
     display: flex;
