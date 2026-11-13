@@ -230,47 +230,88 @@ function initVideoModal() {
 
   const triggers = document.querySelectorAll('.video-play-trigger, [data-video-trigger]');
 
+  const formatVideoEmbedUrl = (url, fallbackCat = '') => {
+    const fallbackMap = {
+      skincare: 'https://www.youtube-nocookie.com/embed/Lx-Z3okBDIY',
+      perfume: 'https://www.youtube-nocookie.com/embed/Z-8nvuqBDbk',
+      fashion: 'https://www.youtube-nocookie.com/embed/RFGfkOLGsEM',
+      food: 'https://www.youtube-nocookie.com/embed/Cq33nkDHD6U',
+      interior: 'https://www.youtube-nocookie.com/embed/4Rpi1ZMKy74',
+      electronics: 'https://www.youtube-nocookie.com/embed/-wNXboIhlSU'
+    };
+
+    let target = (url || '').trim();
+    if (!target) {
+      target = fallbackMap[(fallbackCat || '').toLowerCase()] || 'https://www.youtube-nocookie.com/embed/98fsB_ExctQ';
+    }
+
+    // Direct MP4 / WebM / OGG video file
+    if (target.match(/\.(mp4|webm|ogg)(\?.*)?$/i)) {
+      return { type: 'video', url: target };
+    }
+
+    // YouTube URL normalization (watch?v=, youtu.be, embed, shorts)
+    const ytMatch = target.match(/(?:youtube-nocookie\.com\/embed\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    if (ytMatch && ytMatch[1]) {
+      return {
+        type: 'iframe',
+        url: `https://www.youtube-nocookie.com/embed/${ytMatch[1]}?autoplay=1&rel=0&playsinline=1&modestbranding=1`
+      };
+    }
+
+    // Vimeo URL normalization
+    const vimeoMatch = target.match(/vimeo\.com\/(?:video\/)?([0-9]+)/);
+    if (vimeoMatch && vimeoMatch[1]) {
+      return {
+        type: 'iframe',
+        url: `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1&badge=0&autopause=0`
+      };
+    }
+
+    // If already a clean embed URL
+    if (target.startsWith('http')) {
+      const sep = target.includes('?') ? '&' : '?';
+      return {
+        type: 'iframe',
+        url: `${target}${sep}autoplay=1`
+      };
+    }
+
+    return {
+      type: 'iframe',
+      url: 'https://www.youtube-nocookie.com/embed/98fsB_ExctQ?autoplay=1&rel=0&playsinline=1&modestbranding=1'
+    };
+  };
+
   const openModal = (card) => {
-    const videoSrc = card.getAttribute('data-video-src') || '';
+    const rawVideoSrc = card.getAttribute('data-video-src') || '';
     const posterSrc = card.getAttribute('data-video-poster') || '';
     const title = card.getAttribute('data-video-title') || 'AI Commercial Showcase';
     const category = card.getAttribute('data-video-category') || 'Commercial Spec Ad';
     const desc = card.getAttribute('data-video-desc') || 'Cinematic AI video advertisement produced with ultra-high fidelity rendering and custom sound design.';
+    const cat = card.getAttribute('data-category') || '';
 
     if (modalTitle) modalTitle.textContent = title;
     if (modalCategory) modalCategory.textContent = category;
     if (modalDesc) modalDesc.textContent = desc;
 
     if (videoContainer) {
-      if (videoSrc && (videoSrc.endsWith('.mp4') || videoSrc.endsWith('.webm') || (videoSrc.startsWith('http') && !videoSrc.includes('youtube') && !videoSrc.includes('vimeo')))) {
+      const media = formatVideoEmbedUrl(rawVideoSrc, cat);
+      if (media.type === 'video') {
         videoContainer.innerHTML = `
           <video class="video-modal-player" controls autoplay playsinline poster="${posterSrc}">
-            <source src="${videoSrc}" type="video/mp4">
-            Your browser does not support the video tag.
+            <source src="${media.url}" type="video/mp4">
+            Your browser does not support HTML5 video.
           </video>
         `;
-      } else if (videoSrc && (videoSrc.includes('youtube.com') || videoSrc.includes('youtu.be') || videoSrc.includes('vimeo.com'))) {
+      } else {
         videoContainer.innerHTML = `
           <div class="video-embed-wrapper">
-            <iframe src="${videoSrc}?autoplay=1&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          </div>
-        `;
-      } else {
-        // High fidelity interactive commercial showcase fallback with customization guide
-        videoContainer.innerHTML = `
-          <div class="video-modal-showcase-preview">
-            <img src="${posterSrc}" alt="${title}" class="showcase-preview-img">
-            <div class="showcase-preview-overlay">
-              <div class="showcase-preview-badge">Commercial Preview Ready</div>
-              <div class="showcase-preview-pulse">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z"/>
-                </svg>
-              </div>
-              <p class="showcase-preview-tip">
-                <strong>Commercial Video Player Ready:</strong> To show your uploaded MP4 video or YouTube URL, set the <code>data-video-src</code> attribute on this card.
-              </p>
-            </div>
+            <iframe src="${media.url}" 
+                    title="${title.replace(/"/g, '&quot;')}" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen></iframe>
           </div>
         `;
       }
@@ -290,6 +331,10 @@ function initVideoModal() {
       if (vid) {
         vid.pause();
         vid.src = '';
+      }
+      const iframe = videoContainer.querySelector('iframe');
+      if (iframe) {
+        iframe.src = '';
       }
       videoContainer.innerHTML = '';
     }
