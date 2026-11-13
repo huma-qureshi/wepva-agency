@@ -28,6 +28,14 @@
     <priority>0.95</priority>
   </url>
 
+  <!-- AI Custom Website Development Page -->
+  <url>
+    <loc>https://wepva.site/services/ai-web-development</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
   <!-- Portfolio Page -->
   <url>
     <loc>https://wepva.site/portfolio</loc>

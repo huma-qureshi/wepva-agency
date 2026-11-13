@@ -816,7 +816,12 @@ function prefillContactService() {
       'ai-video-ads': 'ai-video-ads',
       'ai-video': 'ai-video-ads',
       'aivideo': 'ai-video-ads',
-      'video': 'ai-video-ads'
+      'video': 'ai-video-ads',
+      'ai-web-dev': 'ai-web-dev',
+      'ai-web-development': 'ai-web-dev',
+      'ai-website': 'ai-web-dev',
+      'ai-web': 'ai-web-dev',
+      'custom-web': 'ai-web-dev'
     };
 
     if (serviceMap[serviceParam]) {
@@ -837,6 +842,7 @@ function scrollToServiceSection() {
   let targetId = serviceParam;
   if (serviceParam === 'logo') targetId = 'logo';
   if (serviceParam === 'video' || serviceParam === 'aivideo' || serviceParam === 'ai-video') targetId = 'ai-video-ads';
+  if (serviceParam === 'ai-web-dev' || serviceParam === 'ai-web' || serviceParam === 'ai-website' || serviceParam === 'custom-web') targetId = 'ai-web-development';
   
   const targetElement = document.getElementById(targetId) || document.getElementById('logo-design');
   
