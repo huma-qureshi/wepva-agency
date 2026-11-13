@@ -8,7 +8,7 @@
   <title>404 - Page Not Found | WEPVA</title>
 
   <!-- CSS Stylesheet -->
-  <link rel="stylesheet" href="/css/style.css?v=4.0">
+  <link rel="stylesheet" href="/css/style.css?v=5.0">
   
   <!-- Favicon -->
   <link rel="shortcut icon" href="/assets/images/logo-light-text.png" type="image/x-icon">
@@ -29,7 +29,74 @@
       <nav>
         <ul>
           <li><a href="/">Home</a></li>
-          <li><a href="/services">Services</a></li>
+          <li class="nav-item-dropdown">
+            <div class="nav-link-dropdown-wrap">
+              <a href="/services" class="nav-link-services">
+                Services
+                <svg class="dropdown-chevron-icon" xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </a>
+              <button class="dropdown-toggle-btn" aria-label="Toggle Services Submenu" aria-expanded="false">
+                <svg class="dropdown-chevron-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
+            <div class="dropdown-menu">
+              <a href="/services/ai-video-ads" class="dropdown-featured-card">
+                <div class="dropdown-featured-badge">
+                  <span class="badge-pulse"></span>
+                  <span>NEW SERVICE</span>
+                </div>
+                <div class="dropdown-featured-row">
+                  <div class="dropdown-icon-glow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="dropdown-featured-title">AI Video Ads &amp; Commercials</div>
+                    <p class="dropdown-desc">Cinematic commercial video production powered by AI</p>
+                  </div>
+                </div>
+              </a>
+              <div class="dropdown-divider"></div>
+              <div class="dropdown-sublinks-grid">
+                <a href="/services#wordpress" class="dropdown-sublink">
+                  <span class="dropdown-sublink-dot"></span>
+                  WordPress Web Dev
+                </a>
+                <a href="/services#shopify" class="dropdown-sublink">
+                  <span class="dropdown-sublink-dot"></span>
+                  Shopify Store Setup
+                </a>
+                <a href="/services#metaads" class="dropdown-sublink">
+                  <span class="dropdown-sublink-dot"></span>
+                  Meta Ads Marketing
+                </a>
+                <a href="/services#graphics" class="dropdown-sublink">
+                  <span class="dropdown-sublink-dot"></span>
+                  Graphic &amp; Brand Design
+                </a>
+                <a href="/services#management" class="dropdown-sublink">
+                  <span class="dropdown-sublink-dot"></span>
+                  Website Management / VA
+                </a>
+                <a href="/services#ecommerce" class="dropdown-sublink">
+                  <span class="dropdown-sublink-dot"></span>
+                  E-commerce Solutions
+                </a>
+                <a href="/services#logo" class="dropdown-sublink">
+                  <span class="dropdown-sublink-dot"></span>
+                  Brand Logo Design
+                </a>
+              </div>
+              <div class="dropdown-bottom-bar">
+                <a href="/services">View All Services &rarr;</a>
+              </div>
+            </div>
+          </li>
           <li><a href="/portfolio">Portfolio</a></li>
           <li><a href="/about">About</a></li>
           <li><a href="/contact">Contact</a></li>
@@ -107,6 +174,7 @@
         <div class="footer-col">
           <h4>Services</h4>
           <ul>
+            <li><a href="/services/ai-video-ads">AI Video Ads Production</a></li>
             <li><a href="/services?service=wordpress">WordPress Web Dev</a></li>
             <li><a href="/services?service=shopify">Shopify Store Setup</a></li>
             <li><a href="/services?service=metaads">Meta Marketing Ads</a></li>

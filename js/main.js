@@ -7,7 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initCleanUrl();
   initStickyHeader();
   initMobileMenu();
+  initServicesDropdown();
   initPortfolioFilters();
+  initShowreelFilters();
+  initVideoModal();
+  initFaqAccordion();
   initReviewFilters();
   initReviewModal();
   initContactForm();
@@ -117,6 +121,230 @@ function initMobileMenu() {
   navLinks.forEach(link => {
     link.addEventListener('click', () => {
       closeMenu();
+    });
+  });
+}
+
+/**
+ * Services Navigation Dropdown Handling (Desktop & Mobile Drawer)
+ */
+function initServicesDropdown() {
+  const dropdownToggle = document.querySelector('.dropdown-toggle-btn');
+  const dropdownParent = document.querySelector('.nav-item-dropdown');
+  const dropdownMenu = document.querySelector('.dropdown-menu');
+
+  if (!dropdownParent) return;
+
+  // Mobile toggle button handling
+  if (dropdownToggle) {
+    dropdownToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const isExpanded = dropdownParent.classList.toggle('mobile-expanded');
+      dropdownToggle.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+    });
+  }
+
+  // Keyboard accessibility on desktop
+  const servicesLink = dropdownParent.querySelector('.nav-link-services');
+  if (servicesLink && dropdownMenu) {
+    servicesLink.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'Enter') {
+        dropdownParent.classList.add('keyboard-open');
+        const firstFocusable = dropdownMenu.querySelector('a');
+        if (firstFocusable) firstFocusable.focus();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && dropdownParent.classList.contains('keyboard-open')) {
+        dropdownParent.classList.remove('keyboard-open');
+        servicesLink.focus();
+      }
+    });
+
+    dropdownParent.addEventListener('focusout', (e) => {
+      if (!dropdownParent.contains(e.relatedTarget)) {
+        dropdownParent.classList.remove('keyboard-open');
+      }
+    });
+  }
+}
+
+/**
+ * AI Video Ads Showreel Filtering Logic
+ */
+function initShowreelFilters() {
+  const filterButtons = document.querySelectorAll('.showreel-filter-btn');
+  const videoCards = document.querySelectorAll('.showreel-card');
+  
+  if (filterButtons.length === 0 || videoCards.length === 0) return;
+
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      filterButtons.forEach(btn => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-selected', 'false');
+      });
+      button.classList.add('active');
+      button.setAttribute('aria-selected', 'true');
+
+      const filterValue = button.getAttribute('data-filter');
+
+      videoCards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(10px) scale(0.96)';
+        
+        setTimeout(() => {
+          if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
+            card.classList.remove('hidden');
+            setTimeout(() => {
+              card.style.opacity = '1';
+              card.style.transform = 'translateY(0) scale(1)';
+              setTimeout(() => {
+                card.style.opacity = '';
+                card.style.transform = '';
+              }, 300);
+            }, 50);
+          } else {
+            card.classList.add('hidden');
+          }
+        }, 200);
+      });
+    });
+  });
+}
+
+/**
+ * Video Modal Player for Commercial Showreel Previews
+ */
+function initVideoModal() {
+  const modal = document.getElementById('video-modal');
+  if (!modal) return;
+
+  const modalCloseBtn = modal.querySelector('.video-modal-close');
+  const videoContainer = modal.querySelector('.video-modal-media');
+  const modalTitle = modal.querySelector('.video-modal-title');
+  const modalCategory = modal.querySelector('.video-modal-category');
+  const modalDesc = modal.querySelector('.video-modal-desc');
+
+  const triggers = document.querySelectorAll('.video-play-trigger, [data-video-trigger]');
+
+  const openModal = (card) => {
+    const videoSrc = card.getAttribute('data-video-src') || '';
+    const posterSrc = card.getAttribute('data-video-poster') || '';
+    const title = card.getAttribute('data-video-title') || 'AI Commercial Showcase';
+    const category = card.getAttribute('data-video-category') || 'Commercial Spec Ad';
+    const desc = card.getAttribute('data-video-desc') || 'Cinematic AI video advertisement produced with ultra-high fidelity rendering and custom sound design.';
+
+    if (modalTitle) modalTitle.textContent = title;
+    if (modalCategory) modalCategory.textContent = category;
+    if (modalDesc) modalDesc.textContent = desc;
+
+    if (videoContainer) {
+      if (videoSrc && (videoSrc.endsWith('.mp4') || videoSrc.endsWith('.webm') || (videoSrc.startsWith('http') && !videoSrc.includes('youtube') && !videoSrc.includes('vimeo')))) {
+        videoContainer.innerHTML = `
+          <video class="video-modal-player" controls autoplay playsinline poster="${posterSrc}">
+            <source src="${videoSrc}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        `;
+      } else if (videoSrc && (videoSrc.includes('youtube.com') || videoSrc.includes('youtu.be') || videoSrc.includes('vimeo.com'))) {
+        videoContainer.innerHTML = `
+          <div class="video-embed-wrapper">
+            <iframe src="${videoSrc}?autoplay=1&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        `;
+      } else {
+        // High fidelity interactive commercial showcase fallback with customization guide
+        videoContainer.innerHTML = `
+          <div class="video-modal-showcase-preview">
+            <img src="${posterSrc}" alt="${title}" class="showcase-preview-img">
+            <div class="showcase-preview-overlay">
+              <div class="showcase-preview-badge">Commercial Preview Ready</div>
+              <div class="showcase-preview-pulse">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+              <p class="showcase-preview-tip">
+                <strong>Commercial Video Player Ready:</strong> To show your uploaded MP4 video or YouTube URL, set the <code>data-video-src</code> attribute on this card.
+              </p>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeModal = () => {
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (videoContainer) {
+      const vid = videoContainer.querySelector('video');
+      if (vid) {
+        vid.pause();
+        vid.src = '';
+      }
+      videoContainer.innerHTML = '';
+    }
+  };
+
+  triggers.forEach(trigger => {
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      const card = trigger.closest('[data-video-src]') || trigger;
+      openModal(card);
+    });
+  });
+
+  if (modalCloseBtn) {
+    modalCloseBtn.addEventListener('click', closeModal);
+  }
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal || e.target.classList.contains('video-modal-backdrop')) {
+      closeModal();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      closeModal();
+    }
+  });
+}
+
+/**
+ * FAQ Accordion Toggle Interaction
+ */
+function initFaqAccordion() {
+  const faqItems = document.querySelectorAll('.faq-item');
+  if (faqItems.length === 0) return;
+
+  faqItems.forEach(item => {
+    const questionBtn = item.querySelector('.faq-question');
+    if (!questionBtn) return;
+
+    questionBtn.addEventListener('click', () => {
+      const isOpen = item.classList.contains('active');
+      
+      // Close other accordion items
+      faqItems.forEach(other => {
+        other.classList.remove('active');
+        const btn = other.querySelector('.faq-question');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      });
+
+      if (!isOpen) {
+        item.classList.add('active');
+        questionBtn.setAttribute('aria-expanded', 'true');
+      }
     });
   });
 }
@@ -520,7 +748,7 @@ function initContactForm() {
 
 /**
  * Pre-fill Contact form dropdown based on URL parameters
- * Example: contact.html?service=shopify
+ * Example: contact.html?service=ai-video-ads or contact.html?service=shopify
  */
 function prefillContactService() {
   const serviceSelect = document.getElementById('service');
@@ -539,7 +767,11 @@ function prefillContactService() {
       'logo': 'logo',
       'management': 'management',
       'ecommerce': 'ecommerce',
-      'general': 'general'
+      'general': 'general',
+      'ai-video-ads': 'ai-video-ads',
+      'ai-video': 'ai-video-ads',
+      'aivideo': 'ai-video-ads',
+      'video': 'ai-video-ads'
     };
 
     if (serviceMap[serviceParam]) {
@@ -550,14 +782,17 @@ function prefillContactService() {
 
 /**
  * Smooth scroll to service section on services.html
- * Example: services.html?service=wordpress or services.html?service=logo
+ * Example: services.html?service=wordpress or services.html?service=ai-video-ads
  */
 function scrollToServiceSection() {
   const urlParams = new URLSearchParams(window.location.search);
   const serviceParam = urlParams.get('service');
   if (!serviceParam) return;
 
-  const targetId = serviceParam === 'logo' ? 'logo' : serviceParam;
+  let targetId = serviceParam;
+  if (serviceParam === 'logo') targetId = 'logo';
+  if (serviceParam === 'video' || serviceParam === 'aivideo' || serviceParam === 'ai-video') targetId = 'ai-video-ads';
+  
   const targetElement = document.getElementById(targetId) || document.getElementById('logo-design');
   
   if (targetElement) {
